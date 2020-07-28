@@ -1,4 +1,9 @@
-[Console]::OutputEncoding = New-Object -typename System.Text.ASCIIEncoding
+try {
+  [Console]::OutputEncoding = New-Object -typename System.Text.ASCIIEncoding
+}
+catch {
+  Write-Verbose "Failed to set OutputEncoding to ASCII"
+}
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
 
 function Get-PlatformVersion {
@@ -79,14 +84,14 @@ function Get-WebContentOnFullNet {
   $wc.Headers.Add("user-agent", "<%= user_agent_string %>")
   $proxy.Address = $env:http_proxy
   $bypassList = $env:no_proxy
-  
+
 
   if($bypassList -ne $null){
-     
+
 	 $bypassList = $bypassList.split(",")
 	 $proxy.BypassList = $byPassList
   }
-  
+
   $wc.Proxy = $proxy
 
   if ([string]::IsNullOrEmpty($filepath)) {
